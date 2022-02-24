@@ -265,4 +265,4 @@ image::crw-ui-filtered.png[]
 
 . In the CodeReady Workspace IDE, stop the consumer and producer application by entering `Ctrl + C` in the application terminal.
 
-. If you no longer require your instance of Service Registry and Streams for Apache Kafka, you can delete them from the *Application Services* section of link:https://console.redhat.com[console.redhat.com, window="_blank"].
+. If you no longer require your Kafka  instance, you can delete it from the *Application Services* section of link:https://console.redhat.com[console.redhat.com, window="_blank"].

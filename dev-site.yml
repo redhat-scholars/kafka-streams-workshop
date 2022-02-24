@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: Kafka Streams Tutorial(Dev Mode)
-  url: http://localhost:3000/rhs-build-course/index.html
+  url: http://localhost:3000/kafka-streams-tutorial/index.html
   start_page: kafka-streams-tutorial::index.adoc
 
 content:
