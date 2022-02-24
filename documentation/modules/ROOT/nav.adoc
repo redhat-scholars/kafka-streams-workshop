@@ -9,6 +9,7 @@
 * xref:03-create-topics.adoc[3. Create Kafka Topics]
 
 * xref:04-quarkus-kafka-streams.adoc[4. Build Streaming Applications with OpenShift Streams for Apache Kafka]
+** xref:04-quarkus-kafka-streams.adoc#overview[Overview]
 ** xref:04-quarkus-kafka-streams.adoc#devsandboxaccess[Access the Developer Sandbox]
 ** xref:04-quarkus-kafka-streams.adoc#startcodereadyworkspaces[Start CodeReady Workspaces]
 ** xref:04-quarkus-kafka-streams.adoc#runquarkusgeneratorapp[Configure and run the Quarkus Application]

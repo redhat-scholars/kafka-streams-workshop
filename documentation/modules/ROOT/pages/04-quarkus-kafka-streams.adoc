@@ -6,6 +6,9 @@
 
 = Using Quarkus and Kafka Streams with OpenShift Streams for Apache Kafka
 
+[#overview]
+== Architecture Overview
+
 In this workshop you use CodeReady Workspaces, an web-based IDE, on the Developer Sandbox for Red Hat OpenShift to develop, inspect, and run applications. These applications are built using Java, the Quarkus framework, and Kafka Streams API. 
 
 The Kafka Streams application will perform a map operation on entries in the `usd-prices` to create corresponding records in a `eur-prices` topic. Map is a stateless operation link:https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#stateless-transformations[available in the Kafka Streams DSL, window="_blank"].
@@ -90,7 +93,7 @@ In this workshop you will build and run both applications from terminal windows 
 
 Access Kafka instances is managed using a bootstrap server URL, service account, and SASL/OAUTHBEARER token endpoint. For both applications, the Kafka connection properties are configured using their respective `application.properties` file. This example sets environment variables and references them in this file.
 
-. In your CodeReady Workspace, open a terminal for the `{crw-name}` application. +
+. In your CodeReady Workspace, open a terminal for the `{generator-app}` application. +
     * In the top menu, select *Terminal -> Open Terminal in specific container*.
 +
 image::crw-open-quarkus-terminal.png[]
@@ -146,6 +149,8 @@ image::crw-open-browser-tab.png[]
 +
 This opens a browser tab to the main application window of the {generator-app} application.
 +
+. Observe the, and logs from the *{generator-app}* in the terminal.
++
 Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the `usd-prices` Kafka topic. The records in the `usd-prices` are sent to the browser via link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[HTTP Server-Sent Events] and displayed in real-time.
 
 image::crw-ui-without-euro.png[]
@@ -153,6 +158,8 @@ image::crw-ui-without-euro.png[]
 
 [#runkafkastreamsapp]
 == Configure and run the Kafka Streams Application
+
+The Kafka Streams application will consume the `usd-prices` topic, and produce records to a new `eur-prices` topic. The records in the `eur-prices` topic will be used to populate the missing *EUR* column in the UI.
 
 . In your CodeReady Workspace, open a new terminal for the `{converter-name}` application:
   * In the top menu, select *Terminal -> Open Terminal in specific container*.
@@ -222,7 +229,9 @@ mvn compile quarkus:dev
 
 [NOTE]
 ====
-CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the *EUR* column might not be updated due to timing of this connection timeout and reconnect logic in the UI.
+CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the *EUR* column might not be updated due to timing of this connection timeout and reconnect logic in the UI. If the *EUR* column is not populated after restarting the Kafka Streams application, you might need to refresh your browser.
+
+This is a browser-side issue, and not related to the Kafka Streams application. 
 ====
 
 
