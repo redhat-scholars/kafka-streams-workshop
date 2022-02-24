@@ -1,0 +1,259 @@
+:crw-name: quarkus-kafka-streams-tutorial-crw
+:generator-name: quarkus-kafka-streams-generator
+:generator-app: price-generator-app
+:converter-name: quarkus-kafka-streams-converter
+:converter-app: price-converter-streams-app
+
+= Using Quarkus and Kafka Streams with OpenShift Streams for Apache Kafka
+
+In this workshop you use CodeReady Workspaces, an web-based IDE, on the Developer Sandbox for Red Hat OpenShift to develop, inspect, and run applications. These applications are built using Java, the Quarkus framework, and Kafka Streams API. 
+
+The Kafka Streams application will perform a map operation on entries in the `usd-prices` to create corresponding records in a `eur-prices` topic. Map is a stateless operation link:https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#stateless-transformations[available in the Kafka Streams DSL, window="_blank"].
+
+image::crw-stream-workshop-architecture.png[]
+
+Kafka Streams provides a DSL (Domain Specific Language) that enables developers to create scalable data stream processing pipelines with minimal amounts of code.
+
+Quarkus is a Kubernetes-native Java framework made for Java virtual machines (JVMs) and native compilation, and optimized for serverless, cloud, and Kubernetes environments.
+
+The link:https://developers.redhat.com/developer-sandbox[Developer Sandbox for Red Hat OpenShift, window="_blank"] provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools.
+
+link:https://developers.redhat.com/products/codeready-workspaces/overview[CodeReady Workspaces, window="_blank"] is an in-browser IDE that delivers consistent developer environments on Red Hat OpenShift.
+
+[#devsandboxaccess]
+== Access the Developer Sandbox
+
+You can spin up and access your Developer Sandbox with your Red Hat account (the same account you used to create an OpenShift Streams for Apache Kafka instance).
+
+. In a browser window, go to https://developers.redhat.com/developer-sandbox/get-started[developers.redhat.com/developer-sandbox/get-started, window="_blank"].
+
+. Click the *Launch your Developer Sandbox for Red Hat OpenShift* button.
++
+image::devsandbox-launch.png[]
+
+. If required, log in in with your Red Hat account username and password.
+
+. If this is the first time you use the Developer Sandbox, your account needs to be set up. This includes a phone verification step to reduce the creation of fraudulent accounts. After this step it will take a couple of seconds to set up the sandbox. Click the *Start using your sandbox* button to launch the sandbox.
++
+image::devsandbox-start.png[]
++
+. Click the *DevSandbox* option to log into your sandbox.
+
+. You are redirected to the _Developer Perspective_ of your Sandbox OpenShift environment. Feel free to take or skip the _Get Started_ tour.
++
+image::devsandbox-topology.png[]
+
+[#startcodereadyworkspaces]
+== Start CodeReady Workspaces
+
+. In the Sandbox OpenShift web console, click on the *Applications* icon on the top menu. In the drop-down pane, select *CodeReady Workspaces* to launch your instance of CodeReady Workspaces. 
++
+image::devsandbox-applications.png[]
+
+. If necessary, click *DevSandbox* to log in. If you're prompted to prvoide permissions and update account information, go ahead and complete these steps.
++
+The CodeReady Workspaces landing page opens in a new tab of your browser. Make sure the *Create Workspace* page is selected.
++
+image::devsandbox-create-workspace.png[]
++
+. In the *Git Repo URL* text box on the *Quick Add* tab, enter the following url to open the workspace for this lab:
++
+[.console-input]
+[source,text]
+----
+https://github.com/evanshortiss/quarkus-kafka-streams-tutorial-crw
+----
+
+. Click *Create & Open* to create the workspace.
+
+. The creation and startup of the workspace will take a few moments.
++
+image::crw-progressing.png[]
+. Once the workspace is created and started, you are redirected to the main IDE page.
++
+image::crw-workspace.png[]
+
+. To complete the import of the workspace, click *Yes, I trust* in the popup box asking if you trust the authors of the github repo.
++
+image::crw-trust-repo.png[]
++
+You can ignore the popup box asking to restart to enable the recommended extensions.
++
+Notice that your workspace contains two projects corresponding to the two Quarkus applications used in this workshop.
++
+image::crw-projects.png[]
+
+[#runquarkusgeneratorapp]
+== Configure and run the Quarkus Application
+
+In this workshop you will build and run both applications from terminal windows in CodeReady Workspaces.
+
+Access Kafka instances is managed using a bootstrap server URL, service account, and SASL/OAUTHBEARER token endpoint. For both applications, the Kafka connection properties are configured using their respective `application.properties` file. This example sets environment variables and references them in this file.
+
+. In your CodeReady Workspace, open a terminal for the `{crw-name}` application. +
+    * In the top menu, select *Terminal -> Open Terminal in specific container*.
++
+image::crw-open-quarkus-terminal.png[]
++
+    * In the popup window, select *quarkus-maven*. In the next popup, select *{generator-name}* to open the terminal.
++
+image::crw-open-terminal.png[]
+
+. In the terminal window, change directory to the `{generator-app}` directory.
++
+[.console-input]
+[source,bash,subs="attributes"]
+----
+cd price-generator-app/
+----
++
+image::crw-terminal.png[]
+
+. In the terminal, set the following environment variables to use your Kafka instance with the Quarkus application. Replace the values with your own server and credential information which you copied before from https://console.redhat.com[console.redhat.com, window="_blank"]:
+* The `<bootstrap_server>` is the bootstrap server endpoint for your Kafka instance.
+* The `<oauth_token_endpoint_uri>` is the SASL/OAUTHBEARER token endpoint.
+* The `<client_id>` and `<client_secret>` are the generated credentials for your service account.
++
+Setting environment variables for server and credentials:
++
+[.console-input]
+[source,bash]
+----
+export BOOTSTRAP_SERVER=<bootstrap_server>
+export OAUTH_TOKEN_ENDPOINT_URI=<oauth_token_endpoint_uri>
+export CLIENT_ID=<client_id>
+export CLIENT_SECRET=<client_secret>
+----
+
+. In the Quarkus *{generator-name}/{generator-app}* source code, review the `/src/main/resources/application.properties` file to understand how the environment variables you set in the previous step are used.
++
+[NOTE]
+====
+Quarkus applications use link:https://github.com/eclipse/microprofile-reactive-messaging[MicroProfile Reactive Messaging,window="_blank"] to produce messages to and consume messages from your Kafka instances in OpenShift Streams for Apache Kafka. For details on configuration options, see link:https://quarkus.io/guides/kafka[Using Apache Kafka with Reactive Messaging,window="_blank"] in the Quarkus documentation.
+====
++
+. In the terminal, launch the Quarkus application with the maven `quarkus:dev` goal. This will start the application in link:https://quarkus.io/guides/maven-tooling#dev-mode[Quarkus development mode, window="_blank"].
++
+[.console-input]
+[source,bash]
+----
+mvn compile quarkus:dev
+----
+
+. When the application is started up, a popup appears in the bottom right corner of the IDE window, prompting to open a browser tab to the application. Click *Open In New Tab* to open the tab. 
++
+image::crw-open-browser-tab.png[]
++
+This opens a browser tab to the main application window of the {generator-app} application.
++
+Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the `usd-prices` Kafka topic. The records in the `usd-prices` are sent to the browser via link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[HTTP Server-Sent Events] and displayed in real-time.
+
+image::crw-ui-without-euro.png[]
+
+
+[#runkafkastreamsapp]
+== Configure and run the Kafka Streams Application
+
+. In your CodeReady Workspace, open a new terminal for the `{converter-name}` application:
+  * In the top menu, select *Terminal -> Open Terminal in specific container*.
+  * In the popup window, select *quarkus-maven*. In the next popup, select *{converter-name}* to open the terminal.
+
+. In the terminal window, change directory to the `{converter-app}` directory.
++
+[.console-input]
+[source,bash,subs="attributes"]
+----
+cd {converter-app}
+----
+
+. In the terminal, set the environment variables the same as you did for the `{generator-app}`:
++
+[.console-input]
+[source,bash]
+----
+export BOOTSTRAP_SERVER=<bootstrap_server>
+export OAUTH_TOKEN_ENDPOINT_URI=<oauth_token_endpoint_uri>
+export CLIENT_ID=<client_id>
+export CLIENT_SECRET=<client_secret>
+----
+
+. In the *{converter-app}* source code, review the `/src/main/resources/application.properties` and note:
+  * References to the environment variables you set in the previous step. 
+  * The `kafka-streams` properties, e.g the `commit.interval.ms` to commit the current offset every 1000 milliseconds, or the `application-id` that is the consumer group ID of this application.
+  * Properties prefixed with `%test` that are used to connect to a local Kafka driver when running tests via the `mvn test` command.
+. In the {converter-app} source code, review the `TopologyProducer.java` file. The file has multiple inline comments that explain how the code works.
+. In the terminal, launch the *{converter-app}* with the maven `quarkus:dev` goal. This will start the application in link:https://quarkus.io/guides/maven-tooling#dev-mode[Quarkus development mode, window="_blank"].
++
+[.console-input]
+[source,bash]
+----
+mvn compile quarkus:dev
+----
+
+. When the application is started up, a popup appears in the bottom right corner of the IDE window, prompting to add a redirect to port 8081. You don't need this for this workshop, so click *No*.
+
+. Once the *{converter-app}* is started, it will consume all records from the `usd-prices` topic, pass them through a `mapValues` function and write the resulting rercord to the `eur-prices` topic. 
+
+The records produced to the `eur-prices` topic are consumed by the *{generator-app}* and streamed to the UI. The UI should automatically update and show the converted values in the corresponding *EUR* column, and this happens almost instantaneously!
+
+image::crw-ui-with-euro.png[]
+
+[#experimentwithstreams]
+== Experiment with the Kafka Streams Application
+
+=== Stop and Restart the Application
+
+. Select the terminal where the *{converter-app}* is running.
+. Press `CTRL + C` together to stop the application.
+. Return to the browser window that lists the prices. Notice that the *EUR* column is no longer populated?
++
+image::crw-ui-eur-missing.png[]
+{blank}
++
+. Return to the terminal where the *{converter-app}* was running.
+. Start the *{converter-app}* again:
++
+[.console-input]
+[source,bash]
+----
+mvn compile quarkus:dev
+----
+. The *EUR* prices column should be populated again.
+
+[NOTE]
+====
+CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the *EUR* column might not be updated due to timing of this connection timeout and reconnect logic in the UI.
+====
+
+
+=== Modify the Kafka Streams Topology
+
+. Select the terminal where the *{converter-app}* is running. Stop the application using `CTRL + C`.
+. Open the `TopologyProducer.java` file under the `{converter-app}/src/main/java` directory.
+. Add a filter directly between `builder.stream` and `mapValues` lines:
++
+[.console-input]
+[source,java]
+----
+.filter((k, v) -> {
+    // Filter out records with a price of less than $4
+    return Double.valueOf(v.getPrice()) >= 4.0;
+})
+----
+. Start the *{converter-app}* again:
++
+[.console-input]
+[source,bash]
+----
+mvn compile quarkus:dev
+----
+. Return to the browser window that lists the prices. Rows with USD values less than $4 will no longer have a EUR conversion available to display.
+
+image::crw-ui-filtered.png[]
+
+[#cleanup]
+== Clean up
+
+. In the CodeReady Workspace IDE, stop the consumer and producer application by entering `Ctrl + C` in the application terminal.
+
+. If you no longer require your instance of Service Registry and Streams for Apache Kafka, you can delete them from the *Application Services* section of link:https://console.redhat.com[console.redhat.com, window="_blank"].

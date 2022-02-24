@@ -1,2 +1,3 @@
 :experimental:
 :source-highlighter: highlightjs
+:github-repo: https://github.com/redhat-cloud-services-tmm/kafka-tutorial

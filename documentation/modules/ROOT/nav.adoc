@@ -1,7 +1,17 @@
-* xref:01-setup.adoc[1. Setup]
-** xref:01-setup.adoc#prerequisite[Prerequisites]
-** xref:01-setup.adoc#minikube[Setup Minikube]
+* xref:01-provision-kafka-instance.adoc[1. Provision a Kafka instance]
+** xref:01-provision-kafka-instance.adoc#redhataccount[Create a Red Hat Account]
+** xref:01-provision-kafka-instance.adoc#kafka[Provision a Kafka Instance]
 
-* xref:02-deploy.adoc[2. Deploy Service]
-** xref:02-deploy.adoc#package[Build Service]
-** xref:02-deploy.adoc#deploy[Deploy Dervice]
+* xref:02-create-a-service-account.adoc[2. Manage Access & RBAC]
+** xref:02-create-a-service-account.adoc#serviceaccount[Create a Service Account]
+** xref:02-create-a-service-account.adoc#serviceaccountpermissions[Set Permissions for a Service Account]
+
+* xref:03-create-topics.adoc[3. Create Kafka Topics]
+
+* xref:04-quarkus-kafka-streams.adoc[4. Build Streaming Applications with OpenShift Streams for Apache Kafka]
+** xref:04-quarkus-kafka-streams.adoc#devsandboxaccess[Access the Developer Sandbox]
+** xref:04-quarkus-kafka-streams.adoc#startcodereadyworkspaces[Start CodeReady Workspaces]
+** xref:04-quarkus-kafka-streams.adoc#runquarkusgeneratorapp[Configure and run the Quarkus Application]
+** xref:04-quarkus-kafka-streams.adoc#runkafkastreamsapp[Configure and run the Kafka Streams Application]
+** xref:04-quarkus-kafka-streams.adoc#experimentwithstreams[Experiment with Kafka Streams]
+** xref:04-quarkus-kafka-streams.adoc#cleanup[Clean up]

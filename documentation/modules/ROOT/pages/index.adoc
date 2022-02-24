@@ -1,20 +1,54 @@
-= Welcome to Template Tutorial
+= OpenShift Streams for Apache Kafka with Service Registry Workshop
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== Publish Services to Kubernetes
+== Introduction
 
-A Kubernetes tutorial to show how you can deploy a Java service to a Kubernetes cluster as it was a child game.
+Welcome to the OpenShift Streams for Apache Kafka with Service Registry workshop.
+
+As a developer of applications and services, you can use OpenShift Streams for Apache Kafka to create and set up Kafka instances and connect your applications and services to these instances. Streams for Apache Kafka is a managed cloud service that enables you to add Kafka data-streaming functionality in your applications without having to install, configure, run, and maintain your own Kafka clusters.
+
+Kafka itself does not mandate a format for messages. Popular formats for Kafka messages include JSON, Protobuf and Avro. Avro and Protobuf are binary formats, which are much more compact than for example JSON. They require less storage space and less bandwidth. On the other hand, Avro and protobuf require a schema to serialize and deserialize the binary payload. These schemas are generally stored and maintained in a schema registry. 
+
+OpenShift Service Registry is a managed cloud service which provides you with an instance of a schema registry, where you can store and manage different kind of schemas, including OpenAPI spec documents and Avro and Protobuf schemas.
+
+In this workshop you will:
+
+* Provision a Kafka instance using OpenShift Streams for Apache Kafka.
+* Provision a Service Registry instance using OpenShift Service Registry.
+* Create a service account to connect to the Kafka and the Service Registry instances.
+* Run a couple of Quarkus applications which produce and consume messages to and from the Kafka instance using the Avro binary format. The Avro schema is stored in the Service Registry instance.
+
+This workshop uses the link:https://developers.redhat.com/developer-sandbox[Developer Sandbox for Red Hat OpenShift], which provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools, including the web-based CloudReady Workspaces IDE. This also means you won't have to install anything on your workstation in order to run this workshop.
+
+The following picture shows a schematic overview of the architecture of this workshop:
+
+image::workshop-architecture.png[]
 
 [.tiles.browse]
 == Browse modules
 
 [.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#minikube[Minikube]
+.xref:01-provision-kafka-instance.adoc[1. Provision a Kafka instance]
+* xref:01-provision-kafka-instance.adoc#redhataccount[Create a Red Hat Account]
+* xref:01-provision-kafka-instance.adoc#kafka[Provision a Kafka instance]
+* xref:01-provision-kafka-instance.adoc#serviceaccount[Create a Service Account]
+* xref:01-provision-kafka-instance.adoc#serviceaccountpermissions[Set Permissions for a Service Account]
+* xref:01-provision-kafka-instance.adoc#topic[Create a Kafka Topic]
 
 [.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]
+.xref:02-create-service-registry-instance.adoc[2. Create a Service Registry instance]
+* xref:02-create-service-registry-instance.adoc#serviceregistry[Create an instance of OpenShift Service Registry]
+* xref:02-create-service-registry-instance.adoc#serviceaccountpermissions[Set Permissions for a Service Account]
+* xref:02-create-service-registry-instance.adoc#uploadartifact[Upload an artifact to Service Registry]
+* xref:02-create-service-registry-instance.adoc#versionmanagement[Schema version management in Service Registry]
+
+[.tile]
+.xref:03-quarkus-app-with-kafka-service-registry.adoc[3. Use Quarkus applications with Streams for Apache Kafka and OpenShift Service Registry]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#devsandboxaccess[Get access to the Developer Sandbox]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#startcodereadyworkspaces[Start CodeReady Workspaces]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#runquarkusconsumerapp[Configure and run the Quarkus consumer application]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#runquarkusproducerapp[Configure and run the Quarkus producer application]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#inspectschema[Inspect the Avro schema in the Service Registry instance]
+* xref:03-quarkus-app-with-kafka-service-registry.adoc#cleanup[Clean up]

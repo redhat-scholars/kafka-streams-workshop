@@ -1,0 +1,47 @@
+= Provision a Kafka instance in OpenShift Streams for Apache Kafka
+
+As a developer of applications and services, you can use OpenShift Streams for Apache Kafka to create and set up Kafka instances and connect your applications and services to these instances. Streams for Apache Kafka is a managed cloud service that enables you to add Kafka data-streaming functionality in your applications without having to install, configure, run, and maintain your own Kafka clusters.
+
+[#redhataccount]
+== Create a Red Hat account
+
+[NOTE]
+====
+Skip to the link:#kafka[Provision a Kafka Instance] section if you already have a Red Hat Account.
+====
+
+
+You need a Red Hat account to provision a managed Kafka instance. This is how you can create one: 
+
+. Go to https://console.redhat.com[console.redhat.com]. 
+
+. Click the *Register for a Red Hat account* link to create a Red Hat account.
++
+image::register-redhat-account.png[width=60%]
++
+Be sure to select a *Personal account* type.
+. Complete the registration process, opening confirmation emails if necessary.
+
+[#kafka]
+== Provision a Kafka instance in OpenShift Streams for Apache Kafka
+
+. Go to https://console.redhat.com[console.redhat.com] and log in with your Red Hat account.
+
+. On the https://console.redhat.com[console.redhat.com] landing page, select *Application Services* from the menu on the left.
+
+. On the Application Services landing page, select *Streams for Apache Kafka → Kafka Instances*.
++
+image::rhosak-kafka-instances.png[]
+
+. On the Kafka Instances overview page, click the *Create Kafka instance* button. Enter a unique name and select the relevant _Cloud region_ for your Kafka instance and click *Create instance*. This starts the provisioning process for your Kafka instance. 
+
+. The new Kafka instance is listed in the instances table. After a couple of minutes, your instance should be marked as ready. 
++
+image::rhosak-kafka-instance-ready.png[]
+
+. When the instance _Status_ is _Ready_, you can start using the Kafka instance. You can use the *Options* icon (three vertical dots) to view, connect to, or delete the instance as needed.
+
+[NOTE]
+====
+Although you can see Kafka instances created by other users in your organization, you can't manage those instances. Only the user who creates an instance can edit or delete the instance, setup permissions and create or delete topics.
+====
