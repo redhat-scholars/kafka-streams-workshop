@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/01-provision-kafka-instance.html</loc>
-<lastmod>2022-02-24T18:33:30.148Z</lastmod>
+<lastmod>2022-02-24T18:52:15.425Z</lastmod>
 </url>
 <url>
 <loc>https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/02-create-a-service-account.html</loc>
-<lastmod>2022-02-24T18:33:30.148Z</lastmod>
+<lastmod>2022-02-24T18:52:15.425Z</lastmod>
 </url>
 <url>
 <loc>https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/03-create-topics.html</loc>
-<lastmod>2022-02-24T18:33:30.148Z</lastmod>
+<lastmod>2022-02-24T18:52:15.425Z</lastmod>
 </url>
 <url>
 <loc>https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/04-quarkus-kafka-streams.html</loc>
-<lastmod>2022-02-24T18:33:30.148Z</lastmod>
+<lastmod>2022-02-24T18:52:15.425Z</lastmod>
 </url>
 <url>
 <loc>https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/index.html</loc>
-<lastmod>2022-02-24T18:33:30.148Z</lastmod>
+<lastmod>2022-02-24T18:52:15.425Z</lastmod>
 </url>
 </urlset>
