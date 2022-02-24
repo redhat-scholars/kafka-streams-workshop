@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Provision a Kafka instance in OpenShift Streams for Apache Kafka :: Kafka Streams Tutorial</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/01-provision-kafka-instance.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="02-create-a-service-account.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://redhat-scholars.github.io/course-template">Kafka Streams Tutorial</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kafka-streams-tutorial" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-provision-kafka-instance.html">1. Provision a Kafka instance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#redhataccount">Create a Red Hat Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#kafka">Provision a Kafka Instance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-create-a-service-account.html">2. Manage Access &amp; RBAC</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccount">Create a Service Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccountpermissions">Set Permissions for a Service Account</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-create-topics.html">3. Create Kafka Topics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-quarkus-kafka-streams.html">4. Build Streaming Applications with OpenShift Streams for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#devsandboxaccess">Access the Developer Sandbox</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#startcodereadyworkspaces">Start CodeReady Workspaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#runquarkusgeneratorapp">Configure and run the Quarkus Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#runkafkastreamsapp">Configure and run the Kafka Streams Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#experimentwithstreams">Experiment with Kafka Streams</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#cleanup">Clean up</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Kafka Streams Tutorial</a></li>
+    <li><a href="01-provision-kafka-instance.html">1. Provision a Kafka instance</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/evanshortiss/kafka-streams-workshop/edit/master/documentation/modules/ROOT/pages/01-provision-kafka-instance.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Provision a Kafka instance in OpenShift Streams for Apache Kafka</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a developer of applications and services, you can use OpenShift Streams for Apache Kafka to create and set up Kafka instances and connect your applications and services to these instances. Streams for Apache Kafka is a managed cloud service that enables you to add Kafka data-streaming functionality in your applications without having to install, configure, run, and maintain your own Kafka clusters.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="redhataccount"><a class="anchor" href="#redhataccount"></a>Create a Red Hat account</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Skip to the <a href="#kafka">Provision a Kafka Instance</a> section if you already have a Red Hat Account.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You need a Red Hat account to provision a managed Kafka instance. This is how you can create one:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <a href="https://console.redhat.com">console.redhat.com</a>.</p>
+</li>
+<li>
+<p>Click the <strong>Register for a Red Hat account</strong> link to create a Red Hat account.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/register-redhat-account.png" alt="register redhat account" width="60%">
+</div>
+</div>
+<div class="paragraph">
+<p>Be sure to select a <strong>Personal account</strong> type.</p>
+</div>
+</li>
+<li>
+<p>Complete the registration process, opening confirmation emails if necessary.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kafka"><a class="anchor" href="#kafka"></a>Provision a Kafka instance in OpenShift Streams for Apache Kafka</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to <a href="https://console.redhat.com">console.redhat.com</a> and log in with your Red Hat account.</p>
+</li>
+<li>
+<p>On the <a href="https://console.redhat.com">console.redhat.com</a> landing page, select <strong>Application Services</strong> from the menu on the left.</p>
+</li>
+<li>
+<p>On the Application Services landing page, select <strong>Streams for Apache Kafka → Kafka Instances</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/rhosak-kafka-instances.png" alt="rhosak kafka instances">
+</div>
+</div>
+</li>
+<li>
+<p>On the Kafka Instances overview page, click the <strong>Create Kafka instance</strong> button. Enter a unique name and select the relevant <em>Cloud region</em> for your Kafka instance and click <strong>Create instance</strong>. This starts the provisioning process for your Kafka instance.</p>
+</li>
+<li>
+<p>The new Kafka instance is listed in the instances table. After a couple of minutes, your instance should be marked as ready.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/rhosak-kafka-instance-ready.png" alt="rhosak kafka instance ready">
+</div>
+</div>
+</li>
+<li>
+<p>When the instance <em>Status</em> is <em>Ready</em>, you can start using the Kafka instance. You can use the <strong>Options</strong> icon (three vertical dots) to view, connect to, or delete the instance as needed.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Although you can see Kafka instances created by other users in your organization, you can&#8217;t manage those instances. Only the user who creates an instance can edit or delete the instance, setup permissions and create or delete topics.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Kafka Streams Tutorial</a></span>
+  <span class="next"><a href="02-create-a-service-account.html">2. Manage Access &amp; RBAC</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Using Quarkus and Kafka Streams with OpenShift Streams for Apache Kafka :: Kafka Streams Tutorial</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/04-quarkus-kafka-streams.html">
+    <link rel="prev" href="03-create-topics.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://redhat-scholars.github.io/course-template">Kafka Streams Tutorial</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kafka-streams-tutorial" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-provision-kafka-instance.html">1. Provision a Kafka instance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-provision-kafka-instance.html#redhataccount">Create a Red Hat Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-provision-kafka-instance.html#kafka">Provision a Kafka Instance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-create-a-service-account.html">2. Manage Access &amp; RBAC</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccount">Create a Service Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccountpermissions">Set Permissions for a Service Account</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-create-topics.html">3. Create Kafka Topics</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-quarkus-kafka-streams.html">4. Build Streaming Applications with OpenShift Streams for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#devsandboxaccess">Access the Developer Sandbox</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#startcodereadyworkspaces">Start CodeReady Workspaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#runquarkusgeneratorapp">Configure and run the Quarkus Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#runkafkastreamsapp">Configure and run the Kafka Streams Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#experimentwithstreams">Experiment with Kafka Streams</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#cleanup">Clean up</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Kafka Streams Tutorial</a></li>
+    <li><a href="04-quarkus-kafka-streams.html">4. Build Streaming Applications with OpenShift Streams for Apache Kafka</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/evanshortiss/kafka-streams-workshop/edit/master/documentation/modules/ROOT/pages/04-quarkus-kafka-streams.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Using Quarkus and Kafka Streams with OpenShift Streams for Apache Kafka</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this workshop you use CodeReady Workspaces, an web-based IDE, on the Developer Sandbox for Red Hat OpenShift to develop, inspect, and run applications. These applications are built using Java, the Quarkus framework, and Kafka Streams API.</p>
+</div>
+<div class="paragraph">
+<p>The Kafka Streams application will perform a map operation on entries in the <code>usd-prices</code> to create corresponding records in a <code>eur-prices</code> topic. Map is a stateless operation <a href="https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#stateless-transformations" target="_blank" rel="noopener">available in the Kafka Streams DSL</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-stream-workshop-architecture.png" alt="crw stream workshop architecture">
+</div>
+</div>
+<div class="paragraph">
+<p>Kafka Streams provides a DSL (Domain Specific Language) that enables developers to create scalable data stream processing pipelines with minimal amounts of code.</p>
+</div>
+<div class="paragraph">
+<p>Quarkus is a Kubernetes-native Java framework made for Java virtual machines (JVMs) and native compilation, and optimized for serverless, cloud, and Kubernetes environments.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://developers.redhat.com/developer-sandbox" target="_blank" rel="noopener">Developer Sandbox for Red Hat OpenShift</a> provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://developers.redhat.com/products/codeready-workspaces/overview" target="_blank" rel="noopener">CodeReady Workspaces</a> is an in-browser IDE that delivers consistent developer environments on Red Hat OpenShift.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="devsandboxaccess"><a class="anchor" href="#devsandboxaccess"></a>Access the Developer Sandbox</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can spin up and access your Developer Sandbox with your Red Hat account (the same account you used to create an OpenShift Streams for Apache Kafka instance).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In a browser window, go to <a href="https://developers.redhat.com/developer-sandbox/get-started" target="_blank" rel="noopener">developers.redhat.com/developer-sandbox/get-started</a>.</p>
+</li>
+<li>
+<p>Click the <strong>Launch your Developer Sandbox for Red Hat OpenShift</strong> button.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/devsandbox-launch.png" alt="devsandbox launch">
+</div>
+</div>
+</li>
+<li>
+<p>If required, log in in with your Red Hat account username and password.</p>
+</li>
+<li>
+<p>If this is the first time you use the Developer Sandbox, your account needs to be set up. This includes a phone verification step to reduce the creation of fraudulent accounts. After this step it will take a couple of seconds to set up the sandbox. Click the <strong>Start using your sandbox</strong> button to launch the sandbox.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/devsandbox-start.png" alt="devsandbox start">
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>DevSandbox</strong> option to log into your sandbox.</p>
+</li>
+<li>
+<p>You are redirected to the <em>Developer Perspective</em> of your Sandbox OpenShift environment. Feel free to take or skip the <em>Get Started</em> tour.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/devsandbox-topology.png" alt="devsandbox topology">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="startcodereadyworkspaces"><a class="anchor" href="#startcodereadyworkspaces"></a>Start CodeReady Workspaces</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the Sandbox OpenShift web console, click on the <strong>Applications</strong> icon on the top menu. In the drop-down pane, select <strong>CodeReady Workspaces</strong> to launch your instance of CodeReady Workspaces.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/devsandbox-applications.png" alt="devsandbox applications">
+</div>
+</div>
+</li>
+<li>
+<p>If necessary, click <strong>DevSandbox</strong> to log in. If you&#8217;re prompted to prvoide permissions and update account information, go ahead and complete these steps.</p>
+<div class="paragraph">
+<p>The CodeReady Workspaces landing page opens in a new tab of your browser. Make sure the <strong>Create Workspace</strong> page is selected.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/devsandbox-create-workspace.png" alt="devsandbox create workspace">
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>Git Repo URL</strong> text box on the <strong>Quick Add</strong> tab, enter the following url to open the workspace for this lab:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">https://github.com/evanshortiss/quarkus-kafka-streams-tutorial-crw</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Create &amp; Open</strong> to create the workspace.</p>
+</li>
+<li>
+<p>The creation and startup of the workspace will take a few moments.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-progressing.png" alt="crw progressing">
+</div>
+</div>
+</li>
+<li>
+<p>Once the workspace is created and started, you are redirected to the main IDE page.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-workspace.png" alt="crw workspace">
+</div>
+</div>
+</li>
+<li>
+<p>To complete the import of the workspace, click <strong>Yes, I trust</strong> in the popup box asking if you trust the authors of the github repo.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-trust-repo.png" alt="crw trust repo">
+</div>
+</div>
+<div class="paragraph">
+<p>You can ignore the popup box asking to restart to enable the recommended extensions.</p>
+</div>
+<div class="paragraph">
+<p>Notice that your workspace contains two projects corresponding to the two Quarkus applications used in this workshop.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-projects.png" alt="crw projects">
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="runquarkusgeneratorapp"><a class="anchor" href="#runquarkusgeneratorapp"></a>Configure and run the Quarkus Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this workshop you will build and run both applications from terminal windows in CodeReady Workspaces.</p>
+</div>
+<div class="paragraph">
+<p>Access Kafka instances is managed using a bootstrap server URL, service account, and SASL/OAUTHBEARER token endpoint. For both applications, the Kafka connection properties are configured using their respective <code>application.properties</code> file. This example sets environment variables and references them in this file.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In your CodeReady Workspace, open a terminal for the <code>quarkus-kafka-streams-tutorial-crw</code> application.<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the top menu, select <strong>Terminal &#8594; Open Terminal in specific container</strong>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-open-quarkus-terminal.png" alt="crw open quarkus terminal">
+</div>
+</div>
+</li>
+<li>
+<p>In the popup window, select <strong>quarkus-maven</strong>. In the next popup, select <strong>quarkus-kafka-streams-generator</strong> to open the terminal.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-open-terminal.png" alt="crw open terminal">
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the terminal window, change directory to the <code>price-generator-app</code> directory.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd price-generator-app/</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-terminal.png" alt="crw terminal">
+</div>
+</div>
+</li>
+<li>
+<p>In the terminal, set the following environment variables to use your Kafka instance with the Quarkus application. Replace the values with your own server and credential information which you copied before from <a href="https://console.redhat.com" target="_blank" rel="noopener">console.redhat.com</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>&lt;bootstrap_server&gt;</code> is the bootstrap server endpoint for your Kafka instance.</p>
+</li>
+<li>
+<p>The <code>&lt;oauth_token_endpoint_uri&gt;</code> is the SASL/OAUTHBEARER token endpoint.</p>
+</li>
+<li>
+<p>The <code>&lt;client_id&gt;</code> and <code>&lt;client_secret&gt;</code> are the generated credentials for your service account.</p>
+<div class="paragraph">
+<p>Setting environment variables for server and credentials:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export BOOTSTRAP_SERVER=&lt;bootstrap_server&gt;
+export OAUTH_TOKEN_ENDPOINT_URI=&lt;oauth_token_endpoint_uri&gt;
+export CLIENT_ID=&lt;client_id&gt;
+export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the Quarkus <strong>quarkus-kafka-streams-generator/price-generator-app</strong> source code, review the <code>/src/main/resources/application.properties</code> file to understand how the environment variables you set in the previous step are used.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Quarkus applications use <a href="https://github.com/eclipse/microprofile-reactive-messaging" target="_blank" rel="noopener">MicroProfile Reactive Messaging</a> to produce messages to and consume messages from your Kafka instances in OpenShift Streams for Apache Kafka. For details on configuration options, see <a href="https://quarkus.io/guides/kafka" target="_blank" rel="noopener">Using Apache Kafka with Reactive Messaging</a> in the Quarkus documentation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>In the terminal, launch the Quarkus application with the maven <code>quarkus:dev</code> goal. This will start the application in <a href="https://quarkus.io/guides/maven-tooling#dev-mode" target="_blank" rel="noopener">Quarkus development mode</a>.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn compile quarkus:dev</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>When the application is started up, a popup appears in the bottom right corner of the IDE window, prompting to open a browser tab to the application. Click <strong>Open In New Tab</strong> to open the tab.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-open-browser-tab.png" alt="crw open browser tab">
+</div>
+</div>
+<div class="paragraph">
+<p>This opens a browser tab to the main application window of the price-generator-app application.</p>
+</div>
+<div class="paragraph">
+<p>Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the <code>usd-prices</code> Kafka topic. The records in the <code>usd-prices</code> are sent to the browser via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">HTTP Server-Sent Events</a> and displayed in real-time.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-ui-without-euro.png" alt="crw ui without euro">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="runkafkastreamsapp"><a class="anchor" href="#runkafkastreamsapp"></a>Configure and run the Kafka Streams Application</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In your CodeReady Workspace, open a new terminal for the <code>quarkus-kafka-streams-converter</code> application:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>In the top menu, select <strong>Terminal &#8594; Open Terminal in specific container</strong>.</p>
+</li>
+<li>
+<p>In the popup window, select <strong>quarkus-maven</strong>. In the next popup, select <strong>quarkus-kafka-streams-converter</strong> to open the terminal.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the terminal window, change directory to the <code>price-converter-streams-app</code> directory.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd price-converter-streams-app</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the terminal, set the environment variables the same as you did for the <code>price-generator-app</code>:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export BOOTSTRAP_SERVER=&lt;bootstrap_server&gt;
+export OAUTH_TOKEN_ENDPOINT_URI=&lt;oauth_token_endpoint_uri&gt;
+export CLIENT_ID=&lt;client_id&gt;
+export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the <strong>price-converter-streams-app</strong> source code, review the <code>/src/main/resources/application.properties</code> and note:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>References to the environment variables you set in the previous step.</p>
+</li>
+<li>
+<p>The <code>kafka-streams</code> properties, e.g the <code>commit.interval.ms</code> to commit the current offset every 1000 milliseconds, or the <code>application-id</code> that is the consumer group ID of this application.</p>
+</li>
+<li>
+<p>Properties prefixed with <code>%test</code> that are used to connect to a local Kafka driver when running tests via the <code>mvn test</code> command.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the price-converter-streams-app source code, review the <code>TopologyProducer.java</code> file. The file has multiple inline comments that explain how the code works.</p>
+</li>
+<li>
+<p>In the terminal, launch the <strong>price-converter-streams-app</strong> with the maven <code>quarkus:dev</code> goal. This will start the application in <a href="https://quarkus.io/guides/maven-tooling#dev-mode" target="_blank" rel="noopener">Quarkus development mode</a>.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn compile quarkus:dev</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>When the application is started up, a popup appears in the bottom right corner of the IDE window, prompting to add a redirect to port 8081. You don&#8217;t need this for this workshop, so click <strong>No</strong>.</p>
+</li>
+<li>
+<p>Once the <strong>price-converter-streams-app</strong> is started, it will consume all records from the <code>usd-prices</code> topic, pass them through a <code>mapValues</code> function and write the resulting rercord to the <code>eur-prices</code> topic.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The records produced to the <code>eur-prices</code> topic are consumed by the <strong>price-generator-app</strong> and streamed to the UI. The UI should automatically update and show the converted values in the corresponding <strong>EUR</strong> column, and this happens almost instantaneously!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-ui-with-euro.png" alt="crw ui with euro">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="experimentwithstreams"><a class="anchor" href="#experimentwithstreams"></a>Experiment with the Kafka Streams Application</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_stop_and_restart_the_application"><a class="anchor" href="#_stop_and_restart_the_application"></a>Stop and Restart the Application</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the terminal where the <strong>price-converter-streams-app</strong> is running.</p>
+</li>
+<li>
+<p>Press <code>CTRL + C</code> together to stop the application.</p>
+</li>
+<li>
+<p>Return to the browser window that lists the prices. Notice that the <strong>EUR</strong> column is no longer populated?</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-ui-eur-missing.png" alt="crw ui eur missing">
+</div>
+</div>
+<div class="paragraph">
+<p></p>
+</div>
+</li>
+<li>
+<p>Return to the terminal where the <strong>price-converter-streams-app</strong> was running.</p>
+</li>
+<li>
+<p>Start the <strong>price-converter-streams-app</strong> again:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn compile quarkus:dev</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The <strong>EUR</strong> prices column should be populated again.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the <strong>EUR</strong> column might not be updated due to timing of this connection timeout and reconnect logic in the UI.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_modify_the_kafka_streams_topology"><a class="anchor" href="#_modify_the_kafka_streams_topology"></a>Modify the Kafka Streams Topology</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select the terminal where the <strong>price-converter-streams-app</strong> is running. Stop the application using <code>CTRL + C</code>.</p>
+</li>
+<li>
+<p>Open the <code>TopologyProducer.java</code> file under the <code>price-converter-streams-app/src/main/java</code> directory.</p>
+</li>
+<li>
+<p>Add a filter directly between <code>builder.stream</code> and <code>mapValues</code> lines:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">.filter((k, v) -&gt; {
+    // Filter out records with a price of less than $4
+    return Double.valueOf(v.getPrice()) &gt;= 4.0;
+})</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Start the <strong>price-converter-streams-app</strong> again:</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mvn compile quarkus:dev</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Return to the browser window that lists the prices. Rows with USD values less than $4 will no longer have a EUR conversion available to display.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/crw-ui-filtered.png" alt="crw ui filtered">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cleanup"><a class="anchor" href="#cleanup"></a>Clean up</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the CodeReady Workspace IDE, stop the consumer and producer application by entering <code>Ctrl + C</code> in the application terminal.</p>
+</li>
+<li>
+<p>If you no longer require your instance of Service Registry and Streams for Apache Kafka, you can delete them from the <strong>Application Services</strong> section of <a href="https://console.redhat.com" target="_blank" rel="noopener">console.redhat.com</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="03-create-topics.html">3. Create Kafka Topics</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

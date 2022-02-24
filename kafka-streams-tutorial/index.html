@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>OpenShift Streams for Apache Kafka with Service Registry Workshop :: Kafka Streams Tutorial</title>
+    <link rel="canonical" href="https://redhat-scholars.github.io/course-template/kafka-streams-tutorial/index.html">
+    <link rel="next" href="01-provision-kafka-instance.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img src="../_/img/NewRHDFullLogo_4-color_white-wordmark.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://redhat-scholars.github.io/course-template">Kafka Streams Tutorial</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <a class="navbar-item" href="https://developers.redhat.com/cheatsheets/" target="_blank">Cheat Sheets</a>
+        <a class="navbar-item" href="https://developers.redhat.com/events/" target="_blank">Upcoming Events</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kafka-streams-tutorial" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-provision-kafka-instance.html">1. Provision a Kafka instance</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-provision-kafka-instance.html#redhataccount">Create a Red Hat Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-provision-kafka-instance.html#kafka">Provision a Kafka Instance</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-create-a-service-account.html">2. Manage Access &amp; RBAC</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccount">Create a Service Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-create-a-service-account.html#serviceaccountpermissions">Set Permissions for a Service Account</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-create-topics.html">3. Create Kafka Topics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-quarkus-kafka-streams.html">4. Build Streaming Applications with OpenShift Streams for Apache Kafka</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#devsandboxaccess">Access the Developer Sandbox</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#startcodereadyworkspaces">Start CodeReady Workspaces</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#runquarkusgeneratorapp">Configure and run the Quarkus Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#runkafkastreamsapp">Configure and run the Kafka Streams Application</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#experimentwithstreams">Experiment with Kafka Streams</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-quarkus-kafka-streams.html#cleanup">Clean up</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Kafka Streams Tutorial</a></li>
+    <li><a href="index.html">OpenShift Streams for Apache Kafka with Service Registry Workshop</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/evanshortiss/kafka-streams-workshop/edit/master/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">OpenShift Streams for Apache Kafka with Service Registry Workshop</h1>
+<div class="sect1 text-center strong">
+<h2>Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Welcome to the OpenShift Streams for Apache Kafka with Service Registry workshop.</p>
+</div>
+<div class="paragraph">
+<p>As a developer of applications and services, you can use OpenShift Streams for Apache Kafka to create and set up Kafka instances and connect your applications and services to these instances. Streams for Apache Kafka is a managed cloud service that enables you to add Kafka data-streaming functionality in your applications without having to install, configure, run, and maintain your own Kafka clusters.</p>
+</div>
+<div class="paragraph">
+<p>Kafka itself does not mandate a format for messages. Popular formats for Kafka messages include JSON, Protobuf and Avro. Avro and Protobuf are binary formats, which are much more compact than for example JSON. They require less storage space and less bandwidth. On the other hand, Avro and protobuf require a schema to serialize and deserialize the binary payload. These schemas are generally stored and maintained in a schema registry.</p>
+</div>
+<div class="paragraph">
+<p>OpenShift Service Registry is a managed cloud service which provides you with an instance of a schema registry, where you can store and manage different kind of schemas, including OpenAPI spec documents and Avro and Protobuf schemas.</p>
+</div>
+<div class="paragraph">
+<p>In this workshop you will:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provision a Kafka instance using OpenShift Streams for Apache Kafka.</p>
+</li>
+<li>
+<p>Provision a Service Registry instance using OpenShift Service Registry.</p>
+</li>
+<li>
+<p>Create a service account to connect to the Kafka and the Service Registry instances.</p>
+</li>
+<li>
+<p>Run a couple of Quarkus applications which produce and consume messages to and from the Kafka instance using the Avro binary format. The Avro schema is stored in the Service Registry instance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This workshop uses the <a href="https://developers.redhat.com/developer-sandbox">Developer Sandbox for Red Hat OpenShift</a>, which provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools, including the web-based CloudReady Workspaces IDE. This also means you won&#8217;t have to install anything on your workstation in order to run this workshop.</p>
+</div>
+<div class="paragraph">
+<p>The following picture shows a schematic overview of the architecture of this workshop:</p>
+</div>
+<div class="imageblock unresolved">
+<div class="content">
+<img src="workshop-architecture.png" alt="workshop architecture">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 tiles browse">
+<h2>Browse modules</h2>
+<div class="sectionbody">
+<div class="ulist tile">
+<div class="title"><a href="01-provision-kafka-instance.html" class="xref page">1. Provision a Kafka instance</a></div>
+<ul>
+<li>
+<p><a href="01-provision-kafka-instance.html#redhataccount" class="xref page">Create a Red Hat Account</a></p>
+</li>
+<li>
+<p><a href="01-provision-kafka-instance.html#kafka" class="xref page">Provision a Kafka instance</a></p>
+</li>
+<li>
+<p><a href="01-provision-kafka-instance.html#serviceaccount" class="xref page">Create a Service Account</a></p>
+</li>
+<li>
+<p><a href="01-provision-kafka-instance.html#serviceaccountpermissions" class="xref page">Set Permissions for a Service Account</a></p>
+</li>
+<li>
+<p><a href="01-provision-kafka-instance.html#topic" class="xref page">Create a Kafka Topic</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="#02-create-service-registry-instance.adoc" class="xref unresolved">2. Create a Service Registry instance</a></div>
+<ul>
+<li>
+<p><a href="#02-create-service-registry-instance.adoc#serviceregistry" class="xref unresolved">Create an instance of OpenShift Service Registry</a></p>
+</li>
+<li>
+<p><a href="#02-create-service-registry-instance.adoc#serviceaccountpermissions" class="xref unresolved">Set Permissions for a Service Account</a></p>
+</li>
+<li>
+<p><a href="#02-create-service-registry-instance.adoc#uploadartifact" class="xref unresolved">Upload an artifact to Service Registry</a></p>
+</li>
+<li>
+<p><a href="#02-create-service-registry-instance.adoc#versionmanagement" class="xref unresolved">Schema version management in Service Registry</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist tile">
+<div class="title"><a href="#03-quarkus-app-with-kafka-service-registry.adoc" class="xref unresolved">3. Use Quarkus applications with Streams for Apache Kafka and OpenShift Service Registry</a></div>
+<ul>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#devsandboxaccess" class="xref unresolved">Get access to the Developer Sandbox</a></p>
+</li>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#startcodereadyworkspaces" class="xref unresolved">Start CodeReady Workspaces</a></p>
+</li>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#runquarkusconsumerapp" class="xref unresolved">Configure and run the Quarkus consumer application</a></p>
+</li>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#runquarkusproducerapp" class="xref unresolved">Configure and run the Quarkus producer application</a></p>
+</li>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#inspectschema" class="xref unresolved">Inspect the Avro schema in the Service Registry instance</a></p>
+</li>
+<li>
+<p><a href="#03-quarkus-app-with-kafka-service-registry.adoc#cleanup" class="xref unresolved">Clean up</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="next"><a href="01-provision-kafka-instance.html">1. Provision a Kafka instance</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
