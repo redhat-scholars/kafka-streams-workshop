@@ -82,6 +82,9 @@
     <a class="nav-link" href="04-quarkus-kafka-streams.html">4. Build Streaming Applications with OpenShift Streams for Apache Kafka</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#overview">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#devsandboxaccess">Access the Developer Sandbox</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -124,7 +127,8 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Using Quarkus and Kafka Streams with OpenShift Streams for Apache Kafka</h1>
-<div id="preamble">
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>Architecture Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this workshop you use CodeReady Workspaces, an web-based IDE, on the Developer Sandbox for Red Hat OpenShift to develop, inspect, and run applications. These applications are built using Java, the Quarkus framework, and Kafka Streams API.</p>
@@ -282,7 +286,7 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>In your CodeReady Workspace, open a terminal for the <code>quarkus-kafka-streams-tutorial-crw</code> application.<br></p>
+<p>In your CodeReady Workspace, open a terminal for the <code>price-generator-app</code> application.<br></p>
 <div class="ulist">
 <ul>
 <li>
@@ -379,6 +383,9 @@ export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
 <div class="paragraph">
 <p>This opens a browser tab to the main application window of the price-generator-app application.</p>
 </div>
+</li>
+<li>
+<p>Observe the, and logs from the <strong>price-generator-app</strong> in the terminal.</p>
 <div class="paragraph">
 <p>Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the <code>usd-prices</code> Kafka topic. The records in the <code>usd-prices</code> are sent to the browser via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">HTTP Server-Sent Events</a> and displayed in real-time.</p>
 </div>
@@ -395,6 +402,9 @@ export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
 <div class="sect1">
 <h2 id="runkafkastreamsapp"><a class="anchor" href="#runkafkastreamsapp"></a>Configure and run the Kafka Streams Application</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The Kafka Streams application will consume the <code>usd-prices</code> topic, and produce records to a new <code>eur-prices</code> topic. The records in the <code>eur-prices</code> topic will be used to populate the missing <strong>EUR</strong> column in the UI.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -522,7 +532,10 @@ export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the <strong>EUR</strong> column might not be updated due to timing of this connection timeout and reconnect logic in the UI.</p>
+<p>CodeReady Workspace imposes a short timeout on HTTP sockets. Some cells in the <strong>EUR</strong> column might not be updated due to timing of this connection timeout and reconnect logic in the UI. If the <strong>EUR</strong> column is not populated after restarting the Kafka Streams application, you might need to refresh your browser.</p>
+</div>
+<div class="paragraph">
+<p>This is a browser-side issue, and not related to the Kafka Streams application.</p>
 </div>
 </td>
 </tr>
