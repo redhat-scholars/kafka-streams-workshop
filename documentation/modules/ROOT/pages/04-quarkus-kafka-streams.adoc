@@ -149,7 +149,7 @@ image::crw-open-browser-tab.png[]
 +
 This opens a browser tab to the main application window of the {generator-app} application.
 +
-. Observe the, and logs from the *{generator-app}* in the terminal.
+. Observe the UI in your browser, and compare it to the logs from the *{generator-app}* in the terminal.
 +
 Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the `usd-prices` Kafka topic. The records in the `usd-prices` are sent to the browser via link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[HTTP Server-Sent Events] and displayed in real-time.
 
