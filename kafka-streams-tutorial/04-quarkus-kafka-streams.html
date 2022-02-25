@@ -385,7 +385,7 @@ export CLIENT_SECRET=&lt;client_secret&gt;</code></pre>
 </div>
 </li>
 <li>
-<p>Observe the, and logs from the <strong>price-generator-app</strong> in the terminal.</p>
+<p>Observe the UI in your browser, and compare it to the logs from the <strong>price-generator-app</strong> in the terminal.</p>
 <div class="paragraph">
 <p>Once the UI establishes a HTTP connection to the backend, the backend will generate a random USD price every 5 seconds, and produce it to the <code>usd-prices</code> Kafka topic. The records in the <code>usd-prices</code> are sent to the browser via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">HTTP Server-Sent Events</a> and displayed in real-time.</p>
 </div>
