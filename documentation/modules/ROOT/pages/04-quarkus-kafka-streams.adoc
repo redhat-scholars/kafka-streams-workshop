@@ -53,7 +53,7 @@ image::devsandbox-topology.png[]
 +
 image::devsandbox-applications.png[]
 
-. If necessary, click *DevSandbox* to log in. If you're prompted to prvoide permissions and update account information, go ahead and complete these steps.
+. If necessary, click *DevSandbox* to log in. If you're prompted to provide permissions and update account information, go ahead and complete these steps.
 +
 The CodeReady Workspaces landing page opens in a new tab of your browser. Make sure the *Create Workspace* page is selected.
 +
@@ -199,7 +199,7 @@ mvn compile quarkus:dev
 
 . When the application is started up, a popup appears in the bottom right corner of the IDE window, prompting to add a redirect to port 8081. You don't need this for this workshop, so click *No*.
 
-. Once the *{converter-app}* is started, it will consume all records from the `usd-prices` topic, pass them through a `mapValues` function and write the resulting rercord to the `eur-prices` topic. 
+. Once the *{converter-app}* is started, it will consume all records from the `usd-prices` topic, pass them through a `mapValues` function and write the resulting record to the `eur-prices` topic. 
 
 The records produced to the `eur-prices` topic are consumed by the *{generator-app}* and streamed to the UI. The UI should automatically update and show the converted values in the corresponding *EUR* column, and this happens almost instantaneously!
 
