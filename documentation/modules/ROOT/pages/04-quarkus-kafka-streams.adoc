@@ -127,7 +127,9 @@ export OAUTH_TOKEN_ENDPOINT_URI=<oauth_token_endpoint_uri>
 export CLIENT_ID=<client_id>
 export CLIENT_SECRET=<client_secret>
 ----
-
++
+image::crw-set-variables.png[]
++
 . In the Quarkus *{generator-name}/{generator-app}* source code, review the `/src/main/resources/application.properties` file to understand how the environment variables you set in the previous step are used.
 +
 [NOTE]
@@ -161,11 +163,11 @@ image::crw-ui-without-euro.png[]
 
 The Kafka Streams application will consume the `usd-prices` topic, and produce records to a new `eur-prices` topic. The records in the `eur-prices` topic will be used to populate the missing *EUR* column in the UI.
 
-. In your CodeReady Workspace, open a new terminal for the `{converter-name}` application:
+. In your CodeReady Workspace, open a new terminal for the *converter-name}* application:
   * In the top menu, select *Terminal -> Open Terminal in specific container*.
   * In the popup window, select *quarkus-maven*. In the next popup, select *{converter-name}* to open the terminal.
 
-. In the terminal window, change directory to the `{converter-app}` directory.
+. In the terminal window, change directory to the *{converter-app}* directory.
 +
 [.console-input]
 [source,bash,subs="attributes"]
@@ -173,7 +175,7 @@ The Kafka Streams application will consume the `usd-prices` topic, and produce r
 cd {converter-app}
 ----
 
-. In the terminal, set the environment variables the same as you did for the `{generator-app}`:
+. In the terminal, set the environment variables the same as you did for the *{generator-app}*:
 +
 [.console-input]
 [source,bash]
@@ -188,7 +190,7 @@ export CLIENT_SECRET=<client_secret>
   * References to the environment variables you set in the previous step. 
   * The `kafka-streams` properties, e.g the `commit.interval.ms` to commit the current offset every 1000 milliseconds, or the `application-id` that is the consumer group ID of this application.
   * Properties prefixed with `%test` that are used to connect to a local Kafka driver when running tests via the `mvn test` command.
-. In the {converter-app} source code, review the `TopologyProducer.java` file. The file has multiple inline comments that explain how the code works.
+. In the *{converter-app}* source code, review the `TopologyProducer.java` file. The file has multiple inline comments that explain how the code works.
 . In the terminal, launch the *{converter-app}* with the maven `quarkus:dev` goal. This will start the application in link:https://quarkus.io/guides/maven-tooling#dev-mode[Quarkus development mode, window="_blank"].
 +
 [.console-input]
@@ -237,6 +239,15 @@ This is a browser-side issue, and not related to the Kafka Streams application.
 
 === Modify the Kafka Streams Topology
 
+In this section you will adding some custom logic to the Kafka Streams topology. This requires modifying the Java code that is using the Kafka Streams DSL.
+
+[NOTE]
+====
+The term "topology" is used to refer to the logic implemented using the Kafka Streams API/DSL. This is because the logic is composed of a number of stream processing nodes. You can read more about this in the Apache Kafka link:https://kafka.apache.org/0102/documentation/streams/core-concepts#streams_topology[Stream Processing Topology documentation,  window="_blank"].
+====
+
+You'll modify the topology to add a `filter` step. A `filter` can include/exclude messages from processing based on custom logic.
+
 . Select the terminal where the *{converter-app}* is running. Stop the application using `CTRL + C`.
 . Open the `TopologyProducer.java` file under the `{converter-app}/src/main/java` directory.
 . Add a filter directly between `builder.stream` and `mapValues` lines:
@@ -259,6 +270,10 @@ mvn compile quarkus:dev
 . Return to the browser window that lists the prices. Rows with USD values less than $4 will no longer have a EUR conversion available to display.
 
 image::crw-ui-filtered.png[]
+
+The final topology is represented using the high-level architecture diagram below. The arrows indicate the directional flow of messages. Messages are consumed from the `usd-prices` Kafka topic, processed in the Java application using the Kafka Streams DSL, and the new messages output by `mapValues` are written to the `eur-prices` topic.
+
+image::crw-streams-topology.png[]
 
 [#cleanup]
 == Clean up
