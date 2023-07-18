@@ -5,6 +5,14 @@
 [.text-center.strong]
 == Introduction
 
+[WARNING]
+====
+The OpenShift Streams for Apache Kafka service is no longer available. Consider using link:https://developers.redhat.com/products/amq/overview[AMQ Streams], the technology that powered OpenShift Streams for Apache Kafka instead.
+
+This tutorial can no longer be completed. If you're still interested in learning about Apache Kafka and Kubernetes, then try link:https://developers.redhat.com/courses/gitops/apache-kafka-basics[this tutorial on developers.redhat.com].
+====
+
+
 Welcome to the OpenShift Streams for Apache Kafka and Kafka Streams Workshop.
 
 As a developer of applications and services, you can use OpenShift Streams for Apache Kafka to create and set up Kafka instances and connect your applications and services to these instances. Streams for Apache Kafka is a managed cloud service that enables you to add Kafka data-streaming functionality in your applications without having to install, configure, run, and maintain your own Kafka clusters.
